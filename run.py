@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 import json
 import time
 from os import listdir
+import os.path
 
 ## initial
 
@@ -29,10 +30,12 @@ json_path = './json_files/'
 ## get the full list of target html files
 ## change file_type = '.html' for htmel files, '.json' for json files
 def get_all_files(path, file_type = ''):
-	return [f for f in listdir(path) if f.endswith(".html")]
+	return [f for f in listdir(path) if f.endswith(file_type)]
 
 ## save data into json files
-def write_json(file_name, data):
+def write_json(file_name, data, overwrite = True):
+	## is file already exist, don't overwrite
+	if not overwrite and os.path.isfile(file_name): return
 	with open(file_name,  "w") as f:
 		json.dump(data, f)
 	return
@@ -149,8 +152,28 @@ def parse_html(html):
 
 if __name__ == "__main__":
 	files = get_all_files(html_path, file_type = ".html")
+	now = time.time()
+	error_list = []
+	check_exist = True
+
 	for i in files:
-		print("="*20)
-		print('processing:', i, end = '...')
-		result = parse_html(i)
-		print(len(result), 'tables detected')
+		try:
+			#print("="*20)
+			print('processing:', i, end = '...')
+			if check_exist:
+				json_file = json_path + i.split('.')[0] + '.json'
+				if os.path.isfile(json_file):
+					print('existed!')
+					continue
+
+			result = parse_html(i)
+			
+			print(len(result), 'tables detected')
+		except:
+			error_list.append(i)
+
+	## output any error i
+	if error_list:
+		for i in error_list:
+			print(i)
+	print(time.time() - now)
