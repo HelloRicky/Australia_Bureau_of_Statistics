@@ -2,6 +2,7 @@ from os import listdir
 import shutil
 from collections import defaultdict
 import json
+import csv
 
 
 json_path = "./json_files/41/"
@@ -38,6 +39,10 @@ for i in get_all_files(json_path, file_type = '.json'):
   except:
     error_list.append(i)
 
+with open('people_41.csv', 'wb') as f:
+  writer = csv.writer(f)
+  for k, v in result.items():
+    writer.writerow([k, v])
 
 print(len(error_list))
 
