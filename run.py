@@ -38,14 +38,13 @@ def write_json(file_name, data):
 
 ## read json files
 def read_json(file_name):
-	with open(file_name, "r") as f:
-		data = json.loads(f)
+	with open(file_name) as f:
+		data = json.load(f)
 	return data
 
 ## get the deepest level of content, e.g. <strong>--</strong>
 def get_nest_content(data):
 	if not data: return None
-
 
 	try:
 
