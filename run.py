@@ -27,7 +27,8 @@ json_path = './json_files/'
 """
 
 ## get the full list of target html files
-def get_all_html_files(path):
+## change file_type = '.html' for htmel files, '.json' for json files
+def get_all_files(path, file_type = ''):
 	return [f for f in listdir(path) if f.endswith(".html")]
 
 ## save data into json files
@@ -147,7 +148,7 @@ def parse_html(html):
 
 
 if __name__ == "__main__":
-	files = get_all_html_files(html_path)
+	files = get_all_files(html_path, file_type = ".html")
 	for i in files:
 		print("="*20)
 		print('processing:', i, end = '...')
