@@ -19,7 +19,7 @@ import csv
 analysis_path = "./analysis_result"
 json_path = "./json_files"
 json_04 = "4"
-json_41 = "41_3"
+json_41 = "41"
 file_source_type = '.json'
 
 output_dict = defaultdict(lambda:defaultdict())
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
   target_04 = os.path.join(json_path, json_04)
   target_41 = os.path.join(json_path, json_41)
-  target_path = [target_41]
+  target_path = [target_04, target_41]
 
   for (f_name, f_full) in get_all_files(target_path, file_type = file_source_type):
 
@@ -69,8 +69,10 @@ if __name__ == "__main__":
       
       city = str(data['GeoInfo']['city'])
       people_count = int(remove_non_digit(data['summaryTable_qsPeople']['People']))
+      output_dict[city]['lat'] = float(data['GeoInfo']['lat'])
+      output_dict[city]['lon'] = float(data['GeoInfo']['lon'])
       output_dict[city]['people'] = people_count
-      output_dict[city]['code'] = area_code
+      output_dict[city]['code'] = data['GeoInfo']['SSC']
 
       
       

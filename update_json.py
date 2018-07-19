@@ -8,7 +8,7 @@ import csv
 
 json_path = "./json_files"
 json_04 = "4"
-json_41 = "41_3"
+json_41 = "41"
 file_source_type = '.json'
 
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
 	target_04 = os.path.join(json_path, json_04)
 	target_41 = os.path.join(json_path, json_41)
-	target_path = [target_41]
+	target_path = [target_04, target_41]
 
 	for (f_name, f_full) in get_all_files(target_path, file_type = file_source_type):
 		flag = False
