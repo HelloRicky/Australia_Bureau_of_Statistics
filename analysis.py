@@ -6,7 +6,7 @@ Analysis includes:
 
 """
 
-
+from __future__ import print_function
 from os import listdir
 import os.path
 import shutil
@@ -16,12 +16,13 @@ import csv
 
 
 ## initial
+analysis_path = "./analysis_result"
 json_path = "./json_files"
 json_04 = "4"
 json_41 = "41"
 file_source_type = '.json'
 
-output_dict = defaultdict()
+output_dict = defaultdict(lambda:defaultdict())
 error_list = []
 
 """
@@ -35,7 +36,7 @@ def read_json(file_name):
 
 def get_all_files(path, file_type = ''):
 
-  return [f for f in listdir(p) for p in path if f.endswith(file_type)]
+  return [(f, os.path.join(p,f)) for p in path for f in listdir(p) if f.endswith(file_type)]
 
 ## format string value by remove all the non digit charaters
 def remove_non_digit(data):
@@ -43,36 +44,42 @@ def remove_non_digit(data):
   data = data.replace('$', '')
   return data
 
+
 def csv_saver(file_name, data):
   with open(file_name, 'wb') as f:
     writer = csv.writer(f)
-    for k, v in data.items():
-      writer.writerow([k, v])
+    fields = data.values()[0].keys()
+    writer.writerow(['city'] + fields)
+    for k in data.keys():
+      writer.writerow([k] + [data[k][field] for field in fields])
+
 
 if __name__ == "__main__":
 
   target_04 = os.path.join(json_path, json_04)
   target_41 = os.path.join(json_path, json_41)
-  target_path = [target_04, target_41]
+  target_path = [target_04]
 
-  for i in get_all_files(target_path, file_type = file_source_type):
-    area_code = i.split(file_source_type)[0]
+  for (f_name, f_full) in get_all_files(target_path, file_type = file_source_type):
+
+    area_code = f_name.split(file_source_type)[0]
     try:
-      data = read_json(json_path + i)
+      data = read_json(f_full)
       #print(i, data['GeoInfo']['city'], int(remove_non_digit(data['summaryTable_qsPeople']['People'])))
       
       city = str(data['GeoInfo']['city'])
       people_count = int(remove_non_digit(data['summaryTable_qsPeople']['People']))
-      output_dict[city] = people_count
-      output_dict[code] = area_code
+      output_dict[city]['people'] = people_count
+      output_dict[city]['code'] = area_code
 
       
       
     except:
-      error_list.append(i)
+      error_list.append(f_full)
 
   ## save result
-  csv_saver('people_count.csv', output_dict)
+  csv_out = os.path.join(analysis_path, 'people_count.csv')
+  csv_saver(csv_out, output_dict)
 
   print('error count:', len(error_list))
 
