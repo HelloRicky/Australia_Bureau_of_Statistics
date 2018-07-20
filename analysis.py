@@ -18,7 +18,7 @@ import csv
 ## initial
 analysis_path="./analysis_result"
 json_root = "./json_files"
-json_dirs = ['4', '41']
+json_dirs = ['41']
 file_type = '.json'
 
 
@@ -62,6 +62,25 @@ def people_count(data, _dict):
   _dict[city]['code'] = data['GeoInfo']['SSC']
   return _dict
 
+def ancestry_count(data, _dict):
+  
+  city = str(data['GeoInfo']['city'])
+  ancestry = data['Ancestry, top responses']
+  max_k = None
+  max_v = 0
+  for k, v in ancestry.items():
+    val = int(remove_non_digit(v[city]))
+    if val > max_v:
+      max_v = val
+      max_k = k
+  
+  _dict[city]['lat'] = float(data['GeoInfo']['lat'])
+  _dict[city]['lon'] = float(data['GeoInfo']['lon'])
+  _dict[city]['top_ancestry'] = max_k
+  _dict[city]['ancestry_num'] = max_v
+  _dict[city]['code'] = data['GeoInfo']['SSC']
+  return _dict
+
 
 if __name__ == "__main__":
 
@@ -73,14 +92,18 @@ if __name__ == "__main__":
 
     try:
       data = read_json(f)
-      #print(i, data['GeoInfo']['city'], int(remove_non_digit(data['summaryTable_qsPeople']['People'])))
-      output_dict = people_count(data, output_dict)
+      
+      #output_dict = people_count(data, output_dict)
+      output_dict = ancestry_count(data, output_dict)
       
     except:
       error_list.append(f)
 
   ## save result
-  csv_out = os.path.join(analysis_path, 'people_count.csv')
+  
+  #csv_out = os.path.join(analysis_path, 'people_count.csv')
+  csv_out = os.path.join(analysis_path, 'ancestry_count.csv')
+
   csv_saver(csv_out, output_dict)
   print("Completed!")
   if error_list: print('error count:', len(error_list))
