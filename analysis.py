@@ -2,6 +2,7 @@
 use this script to analysis the downloaded data, mainly for 4 and 41 dataset
 Analysis includes:
 - people distribution
+- ancestry_count
 - people density
 
 """

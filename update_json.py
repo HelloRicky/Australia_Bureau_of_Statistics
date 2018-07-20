@@ -1,3 +1,8 @@
+"""
+use this script to add lat and lot attribute to json files
+
+"""
+
 from __future__ import print_function
 from os import listdir
 import os.path
@@ -12,9 +17,8 @@ json_41 = "41"
 file_source_type = '.json'
 
 
-
 def read_csv():
-	reader = csv.DictReader(open('lat_lon_au.csv', 'rb'))
+	reader = csv.DictReader(open('./assets/lat_lon_au.csv', 'rb'))
 	dict_list = []
 	for line in reader:
 		dict_list.append(line)
