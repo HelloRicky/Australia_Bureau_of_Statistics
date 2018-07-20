@@ -16,17 +16,16 @@ import csv
 
 
 ## initial
-analysis_path = "./analysis_result"
-json_path = "./json_files"
-json_04 = "4"
-json_41 = "41"
-file_source_type = '.json'
+analysis_path="./analysis_result"
+json_root = "./json_files"
+json_dirs = ['4', '41']
+file_type = '.json'
 
-output_dict = defaultdict(lambda:defaultdict())
+
+
 error_list = []
 
 """
-
 helper function
 """
 def read_json(file_name):
@@ -36,7 +35,7 @@ def read_json(file_name):
 
 def get_all_files(path, file_type = ''):
 
-  return [(f, os.path.join(p,f)) for p in path for f in listdir(p) if f.endswith(file_type)]
+  return [os.path.join(p,f) for p in path for f in listdir(p) if f.endswith(file_type)]
 
 ## format string value by remove all the non digit charaters
 def remove_non_digit(data):
@@ -53,36 +52,37 @@ def csv_saver(file_name, data):
     for k in data.keys():
       writer.writerow([k] + [data[k][field] for field in fields])
 
+def people_count(data, _dict):
+  
+  city = str(data['GeoInfo']['city'])
+  people_count = int(remove_non_digit(data['summaryTable_qsPeople']['People']))
+  _dict[city]['lat'] = float(data['GeoInfo']['lat'])
+  _dict[city]['lon'] = float(data['GeoInfo']['lon'])
+  _dict[city]['people'] = people_count
+  _dict[city]['code'] = data['GeoInfo']['SSC']
+  return _dict
+
 
 if __name__ == "__main__":
 
-  target_04 = os.path.join(json_path, json_04)
-  target_41 = os.path.join(json_path, json_41)
-  target_path = [target_04, target_41]
+  output_dict = defaultdict(lambda:defaultdict())
 
-  for (f_name, f_full) in get_all_files(target_path, file_type = file_source_type):
+  file_paths = [os.path.join(json_root, d) for d in json_dirs]
 
-    area_code = f_name.split(file_source_type)[0]
+  for f in get_all_files(file_paths, file_type = file_type):
+
     try:
-      data = read_json(f_full)
+      data = read_json(f)
       #print(i, data['GeoInfo']['city'], int(remove_non_digit(data['summaryTable_qsPeople']['People'])))
-      
-      city = str(data['GeoInfo']['city'])
-      people_count = int(remove_non_digit(data['summaryTable_qsPeople']['People']))
-      output_dict[city]['lat'] = float(data['GeoInfo']['lat'])
-      output_dict[city]['lon'] = float(data['GeoInfo']['lon'])
-      output_dict[city]['people'] = people_count
-      output_dict[city]['code'] = data['GeoInfo']['SSC']
-
-      
+      output_dict = people_count(data, output_dict)
       
     except:
-      error_list.append(f_full)
+      error_list.append(f)
 
   ## save result
   csv_out = os.path.join(analysis_path, 'people_count.csv')
   csv_saver(csv_out, output_dict)
-
-  print('error count:', len(error_list))
+  print("Completed!")
+  if error_list: print('error count:', len(error_list))
 
 
