@@ -3,10 +3,10 @@
 Analysis of ABS 2016 data, the currently version only cover NSW data set.
 Main focus on population distribution and Ancestry distribution.
 
-Python files:
+## Python files ##
 * analysis.py: use json file to generate cvs file depend on the slected features
 
-Output directory:
+## Output directory ##
 * json_files: included all the table attributes (up to 41 features) parsed from html pages
   * 2.zip only contains the SSC code (State Suburbs Code) and suburb name
   * 4.zip contains the summary table
@@ -16,7 +16,7 @@ Output directory:
   * people_count.csv: data used from both 4.zip and 41.zip
   * images: output images from Tableau of csv files
 
-Data Source:
+## Data Source ##
 
 2016 SSC data were from: http://quickstats.censusdata.abs.gov.au/
 * Sample link: http://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC10233?opendocument
