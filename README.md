@@ -15,9 +15,12 @@ Main focus on population distribution and Ancestry distribution.
   * ancestry_count.csv: data used from 41.zip only
   * people_count.csv: data used from both 4.zip and 41.zip
   * images: output images from Tableau of csv files
+* assets
+  * latitude and longitude
+  * postcode
 
 ## Data Source ##
 
 2016 SSC data were from: http://quickstats.censusdata.abs.gov.au/
 * Sample link: http://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC10233?opendocument
-* Lat and Lon data from:http://stat.abs.gov.au/itt/r.jsp?ABSMaps
+* latitude and longitude data from:http://stat.abs.gov.au/itt/r.jsp?ABSMaps
